@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10251f">
+  <meta name="description" content="Planificador preliminar de vuelos de dron en montaña.">
+  <title>DronMontaña · Planificador</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">DM</div>
+    <div><strong>DronMontaña</strong><small>Planifica antes de despegar</small></div>
+    <span class="region-tag">NAVARRA · BETA</span>
+  </header>
+
+  <main class="layout">
+    <section class="intro">
+      <p class="eyebrow">PLANIFICADOR DE VUELO</p>
+      <h1>¿Puedo volar aquí?</h1>
+      <p>Consulta un punto y revisa qué comprobaciones necesitas antes de volar.</p>
+    </section>
+
+    <section class="search-panel panel">
+      <label for="place">Cima, localidad o coordenadas</label>
+      <div class="search-row">
+        <input id="place" type="search" placeholder="Ej. Mesa de los Tres Reyes o 42.95, -1.02">
+        <button id="searchBtn" class="primary">Buscar</button>
+      </div>
+      <div class="button-row">
+        <button id="gpsBtn" class="secondary">◎ Usar mi ubicación</button>
+        <button id="clearBtn" class="ghost">Limpiar punto</button>
+      </div>
+      <p id="pointInfo" class="muted" aria-live="polite">Selecciona un punto en el mapa o busca una ubicación.</p>
+    </section>
+
+    <section class="map-panel panel">
+      <div class="panel-heading"><div><h2>Mapa</h2><p class="muted">Toca el mapa para seleccionar el lugar de vuelo.</p></div><span class="map-chip">OpenStreetMap</span></div>
+      <div id="map" role="application" aria-label="Mapa interactivo de Navarra"></div>
+    </section>
+
+    <section class="result-panel panel">
+      <div class="panel-heading"><div><h2>Comprobación preliminar</h2><p class="muted">Estado del punto seleccionado</p></div></div>
+      <div class="status status-unknown">
+        <span class="status-dot"></span>
+        <div><strong>NO CONFIRMADO</strong><p>Esta versión todavía no incorpora las capas oficiales descargables ni sus restricciones geográficas. No interpretes la ausencia de avisos como permiso para volar.</p></div>
+      </div>
+      <ul class="checks">
+        <li><span class="check-icon">1</span><div><strong>Espacio aéreo y zonas UAS</strong><p>Consulta ENAIRE Drones para el punto y la fecha exactos.</p><a href="https://drones.enaire.es/" target="_blank" rel="noopener">Abrir ENAIRE Drones ↗</a></div></li>
+        <li><span class="check-icon">2</span><div><strong>Espacios naturales de Navarra</strong><p>Comprueba si el lugar está protegido y si requiere autorización ambiental para volar.</p><a href="https://www.navarra.es/es/medio-ambiente/autorizaciones-en-espacios-protegidos" target="_blank" rel="noopener">Autorizaciones de Navarra ↗</a></div></li>
+        <li><span class="check-icon">3</span><div><strong>Fauna, nidificación y restricciones temporales</strong><p>Revisa las condiciones específicas del espacio y la posible presencia de fauna sensible.</p><a href="https://www.navarra.es/es/medio-ambiente" target="_blank" rel="noopener">Medio Ambiente Navarra ↗</a></div></li>
+      </ul>
+    </section>
+
+    <section class="notes panel">
+      <h2>Antes de volar</h2>
+      <p>El DJI Neo pesa menos de 250 g, pero al incorporar cámara normalmente exige registro del operador UAS salvo que sea un juguete conforme a la normativa. Comprueba tu situación en AESA.</p>
+      <a href="https://www.seguridadaerea.gob.es/es/ambitos/drones/registro-de-operador-de-drones-uas" target="_blank" rel="noopener">Información oficial de AESA ↗</a>
+      <p class="small muted">DronMontaña es una herramienta de apoyo, no una autorización oficial ni una garantía jurídica. La responsabilidad de verificar las condiciones del vuelo corresponde al operador.</p>
+    </section>
+  </main>
+
+  <footer> DronMontaña · Versión 0.1 · Fuentes oficiales enlazadas · Datos geográficos aún no integrados </footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
