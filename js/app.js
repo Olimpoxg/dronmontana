@@ -1,6 +1,7 @@
 const map = L.map('map', {zoomControl:true}).setView([42.695, -1.676], 8);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
 let marker = null;
@@ -17,6 +18,7 @@ function setPoint(lat, lon, label='Punto seleccionado') {
   map.setView([lat, lon], 14);
   info.textContent = `${label} · ${lat.toFixed(6)}, ${lon.toFixed(6)}`;
   placeInput.value = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+  window.dispatchEvent(new CustomEvent('dronmontana:point-selected', {detail:{lat, lon, label}}));
 }
 
 map.on('click', e => setPoint(e.latlng.lat, e.latlng.lng));
@@ -58,4 +60,5 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   placeInput.value = '';
   info.textContent = 'Selecciona un punto en el mapa o busca una ubicación.';
   map.setView([42.695, -1.676], 8);
+  window.dispatchEvent(new CustomEvent('dronmontana:point-cleared'));
 });

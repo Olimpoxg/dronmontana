@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10251f">
-  <meta name="description" content="Planificador preliminar de vuelos de dron en montaña.">
-  <title>DronMontaña · Planificador</title>
+  <meta name="description" content="Comprobador preliminar de zonas UAS para vuelos de dron en montaña.">
+  <title>DronMontaña · v0.2</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -13,20 +13,20 @@
   <header class="topbar">
     <div class="brand-mark">DM</div>
     <div><strong>DronMontaña</strong><small>Planifica antes de despegar</small></div>
-    <span class="region-tag">NAVARRA · BETA</span>
+    <span class="region-tag">NAVARRA · v0.2</span>
   </header>
 
   <main class="layout">
     <section class="intro">
-      <p class="eyebrow">PLANIFICADOR DE VUELO</p>
-      <h1>¿Puedo volar aquí?</h1>
-      <p>Consulta un punto y revisa qué comprobaciones necesitas antes de volar.</p>
+      <p class="eyebrow">PLANIFICADOR DE VUELO · NAVARRA</p>
+      <h1>¿Qué restricciones hay aquí?</h1>
+      <p>Selecciona una cima o un punto del mapa y consulta las zonas geográficas UAS publicadas por ENAIRE.</p>
     </section>
 
     <section class="search-panel panel">
       <label for="place">Cima, localidad o coordenadas</label>
       <div class="search-row">
-        <input id="place" type="search" placeholder="Ej. Mesa de los Tres Reyes o 42.95, -1.02">
+        <input id="place" type="search" placeholder="Ej. Mesa de los Tres Reyes o 42.95, -1.02" autocomplete="off">
         <button id="searchBtn" class="primary">Buscar</button>
       </div>
       <div class="button-row">
@@ -37,33 +37,59 @@
     </section>
 
     <section class="map-panel panel">
-      <div class="panel-heading"><div><h2>Mapa</h2><p class="muted">Toca el mapa para seleccionar el lugar de vuelo.</p></div><span class="map-chip">OpenStreetMap</span></div>
+      <div class="panel-heading">
+        <div><h2>Mapa</h2><p class="muted">Toca el mapa para seleccionar el lugar de vuelo.</p></div>
+        <span class="map-chip">OpenStreetMap</span>
+      </div>
       <div id="map" role="application" aria-label="Mapa interactivo de Navarra"></div>
     </section>
 
     <section class="result-panel panel">
-      <div class="panel-heading"><div><h2>Comprobación preliminar</h2><p class="muted">Estado del punto seleccionado</p></div></div>
-      <div class="status status-unknown">
-        <span class="status-dot"></span>
-        <div><strong>NO CONFIRMADO</strong><p>Esta versión todavía no incorpora las capas oficiales descargables ni sus restricciones geográficas. No interpretes la ausencia de avisos como permiso para volar.</p></div>
+      <div class="panel-heading">
+        <div><h2>Comprobación aeronáutica</h2><p class="muted">Consulta en directo de la API pública de ENAIRE</p></div>
+        <span id="checkedAt" class="map-chip">Pendiente</span>
       </div>
-      <ul class="checks">
-        <li><span class="check-icon">1</span><div><strong>Espacio aéreo y zonas UAS</strong><p>Consulta ENAIRE Drones para el punto y la fecha exactos.</p><a href="https://drones.enaire.es/" target="_blank" rel="noopener">Abrir ENAIRE Drones ↗</a></div></li>
-        <li><span class="check-icon">2</span><div><strong>Espacios naturales de Navarra</strong><p>Comprueba si el lugar está protegido y si requiere autorización ambiental para volar.</p><a href="https://www.navarra.es/es/medio-ambiente/autorizaciones-en-espacios-protegidos" target="_blank" rel="noopener">Autorizaciones de Navarra ↗</a></div></li>
-        <li><span class="check-icon">3</span><div><strong>Fauna, nidificación y restricciones temporales</strong><p>Revisa las condiciones específicas del espacio y la posible presencia de fauna sensible.</p><a href="https://www.navarra.es/es/medio-ambiente" target="_blank" rel="noopener">Medio Ambiente Navarra ↗</a></div></li>
-      </ul>
+      <div id="overallStatus" class="status status-unknown" aria-live="polite">
+        <span class="status-dot"></span>
+        <div><strong>NO COMPROBADO</strong><p>Selecciona un punto para consultar las capas aeronáuticas.</p></div>
+      </div>
+      <div id="layerResults" class="layer-results">
+        <p class="muted">Se consultan las capas aeronáuticas, infraestructuras y entornos urbanos. La consulta no incluye NOTAM ni restricciones ambientales.</p>
+      </div>
+      <div class="source-line">
+        <span>Fuente: ENAIRE · servAIS · FeatureServer V2</span>
+        <a href="https://aip.enaire.es/aip/UAS-es.html" target="_blank" rel="noopener">Ver datos y fecha de actualización ↗</a>
+      </div>
+    </section>
+
+    <section class="environment-panel panel">
+      <div class="panel-heading"><div><h2>Comprobación ambiental</h2><p class="muted">Espacios protegidos, fauna y restricciones temporales</p></div></div>
+      <div class="status status-pending">
+        <span class="status-dot"></span>
+        <div><strong>PENDIENTE DE INTEGRACIÓN</strong><p>Esta versión todavía no cruza el punto con las geometrías ambientales de IDENA. La presencia en Red Natura 2000 o en un espacio protegido no significa automáticamente que el vuelo esté prohibido: hay que revisar la normativa y las condiciones específicas.</p></div>
+      </div>
+      <div class="source-links">
+        <a href="https://idena.navarra.es/navegar/" target="_blank" rel="noopener">Visor oficial IDENA ↗</a>
+        <a href="https://www.navarra.es/es/medio-ambiente/espacios-naturales-protegidos" target="_blank" rel="noopener">Espacios naturales protegidos ↗</a>
+        <a href="https://www.navarra.es/es/medio-ambiente/autorizaciones-en-espacios-protegidos" target="_blank" rel="noopener">Solicitar autorizaciones ↗</a>
+      </div>
     </section>
 
     <section class="notes panel">
       <h2>Antes de volar</h2>
-      <p>El DJI Neo pesa menos de 250 g, pero al incorporar cámara normalmente exige registro del operador UAS salvo que sea un juguete conforme a la normativa. Comprueba tu situación en AESA.</p>
-      <a href="https://www.seguridadaerea.gob.es/es/ambitos/drones/registro-de-operador-de-drones-uas" target="_blank" rel="noopener">Información oficial de AESA ↗</a>
-      <p class="small muted">DronMontaña es una herramienta de apoyo, no una autorización oficial ni una garantía jurídica. La responsabilidad de verificar las condiciones del vuelo corresponde al operador.</p>
+      <ul>
+        <li>Consulta ENAIRE Drones para el punto y la fecha exactos, incluidos avisos y NOTAM.</li>
+        <li>Comprueba las restricciones ambientales y las condiciones de cada espacio protegido.</li>
+        <li>Verifica los requisitos de operador, piloto, categoría y clase de dron aplicables a tu operación.</li>
+      </ul>
+      <p><a href="https://drones.enaire.es/" target="_blank" rel="noopener">Abrir ENAIRE Drones ↗</a> · <a href="https://www.seguridadaerea.gob.es/es/ambitos/drones" target="_blank" rel="noopener">Información AESA ↗</a></p>
+      <p class="small muted">DronMontaña es una herramienta de apoyo, no una autorización oficial ni una garantía jurídica. “Sin coincidencias” significa únicamente que la consulta puntual a las capas disponibles no ha devuelto polígonos; no significa que el vuelo esté permitido.</p>
     </section>
   </main>
 
-  <footer> DronMontaña · Versión 0.1 · Fuentes oficiales enlazadas · Datos geográficos aún no integrados </footer>
+  <footer>DronMontaña · Versión 0.2 · Consulta aeronáutica experimental · Evaluación ambiental pendiente</footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="js/app.js"></script>
+  <script src="js/checker.js"></script>
 </body>
 </html>
